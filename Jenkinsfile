@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'node:20'
-      args '-u root:root' // allows caching and writing files if needed
+      args '-u root:root'
     }
   }
 
@@ -12,35 +12,37 @@ pipeline {
   }
 
   stages {
-
-    stage('Lint') {
-      steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm ci'
-          sh 'npm run lint'
-        }
-      }
-    }
-
     stage('Checkout') {
       steps {
-        checkout scm
+        cleanWs()       // wipe workspace first
+        checkout scm    // pull latest code
       }
     }
 
     stage('Install deps') {
       steps {
-        sh 'npm ci'
+        dir('simple-nodejs-app-1') {
+          sh 'npm ci'
+        }
       }
     }
 
-    // jobs only run if lint passes
+    stage('Lint') {
+      steps {
+        dir('simple-nodejs-app-1') {
+          sh 'npm run lint'
+        }
+      }
+    }
+
     stage('Test') {
       when {
         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
       }
       steps {
-        sh 'npm test'
+        dir('simple-nodejs-app-1') {
+          sh 'npm test'
+        }
       }
     }
   }
@@ -50,10 +52,9 @@ pipeline {
       echo 'Pipeline succeeded.'
     }
     failure {
-      echo 'Pipeline failed (likely lint). Investigate ESLint output above.'
+      echo 'Pipeline failed. Check lint/test output above.'
     }
     always {
-      // Archive logs/artifacts if useful
       echo "Build finished with status: ${currentBuild.currentResult}"
     }
   }
