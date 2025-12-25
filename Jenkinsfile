@@ -2,7 +2,6 @@ pipeline {
   agent {
     docker {
       image 'node:20'
-      args '-u jenkins:jenkins' // run as Jenkins user
     }
   }
 
