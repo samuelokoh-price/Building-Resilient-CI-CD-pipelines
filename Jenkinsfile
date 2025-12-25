@@ -15,7 +15,10 @@ pipeline {
 
     stage('Lint') {
       steps {
-        sh 'npm run lint'
+        dir('simple-nodejs-app-1') {
+          sh 'npm ci'
+          sh 'npm run lint'
+        }
       }
     }
 
