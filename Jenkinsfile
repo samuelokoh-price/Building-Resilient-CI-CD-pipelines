@@ -12,25 +12,21 @@ pipeline {
 
     stage('Install deps') {
       steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm ci'
+        sh 'cd simple-nodejs-app-1 && npm ci'
         }
       }
-    }
+    
 
     stage('Lint') {
       steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm run lint'
+          sh ' cd simple-nodejs-app-1 && npm run lint'
         }
       }
-    }
+    
 
     stage('Test') {
       steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm test'
-        }
+        sh 'cd simple-nodejs-app-1 && npm test'
       }
     }
   }
