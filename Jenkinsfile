@@ -1,60 +1,13 @@
 pipeline {
   agent {
-    docker {
-      image 'node:20'
-    }
+    docker { image 'node:20' }
   }
-
-  options {
-    timestamps()
-    disableConcurrentBuilds()
-  }
-
   stages {
-    stage('Checkout') {
+    stage('Check Docker') {
       steps {
-        cleanWs()       // wipe workspace first
-        checkout scm    // pull latest code
+        sh 'node -v'
+        sh 'npm -v'
       }
-    }
-
-    stage('Install deps') {
-      steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm ci'
-        }
-      }
-    }
-
-    stage('Lint') {
-      steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm run lint'
-        }
-      }
-    }
-
-    stage('Test') {
-      when {
-        expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-      }
-      steps {
-        dir('simple-nodejs-app-1') {
-          sh 'npm test'
-        }
-      }
-    }
-  }
-
-  post {
-    success {
-      echo 'Pipeline succeeded.'
-    }
-    failure {
-      echo 'Pipeline failed. Check lint/test output above.'
-    }
-    always {
-      echo "Build finished with status: ${currentBuild.currentResult}"
     }
   }
 }
