@@ -3,10 +3,34 @@ pipeline {
     docker { image 'node:20' }
   }
   stages {
-    stage('Check Docker') {
+    stage('Checkout') {
       steps {
-        sh 'node -v'
-        sh 'npm -v'
+        cleanWs()
+        checkout scm
+      }
+    }
+
+    stage('Install deps') {
+      steps {
+        dir('simple-nodejs-app-1') {
+          sh 'npm ci'
+        }
+      }
+    }
+
+    stage('Lint') {
+      steps {
+        dir('simple-nodejs-app-1') {
+          sh 'npm run lint'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        dir('simple-nodejs-app-1') {
+          sh 'npm test'
+        }
       }
     }
   }
