@@ -1,32 +1,19 @@
 pipeline {
-  agent {
-    docker { image 'node:20' }
-  }
+  agent any
   stages {
-    stage('Checkout') {
+    stage('Build Docker Image') {
       steps {
-        cleanWs()
-        checkout scm
+        sh 'docker build -t my-node-app .'
       }
     }
-
-    stage('Install deps') {
+    stage('Run Lint') {
       steps {
-        sh 'cd simple-nodejs-app-1 && npm ci'
-        }
+        sh 'docker run --rm my-node-app npm run lint'
       }
-    
-
-    stage('Lint') {
+    }
+    stage('Run Tests') {
       steps {
-          sh ' cd simple-nodejs-app-1 && npm run lint'
-        }
-      }
-    
-
-    stage('Test') {
-      steps {
-        sh 'cd simple-nodejs-app-1 && npm test'
+        sh 'docker run --rm my-node-app npm test'
       }
     }
   }

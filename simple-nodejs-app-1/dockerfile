@@ -1,0 +1,18 @@
+FROM node:20
+
+# Set working directory inside container
+WORKDIR /app
+
+COPY simple-nodejs-app-1/package*.json ./
+
+# Install dependencies using npm ci
+RUN npm ci --only=production
+
+# Copy the rest of your app
+COPY simple-nodejs-app-1 .
+
+# Expose the application port
+EXPOSE 3000
+
+# Default command to start the app
+CMD ["npm", "start"]
