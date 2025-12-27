@@ -25,7 +25,7 @@ pipeline {
         sh '''
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $HOME/Library/Caches/trivy:/root/.cache/ trivy
+            -v /var/lib/jenkins/Library/Caches/trivy:/root/.cache/ \
             aquasec/trivy:latest image \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
