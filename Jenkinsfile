@@ -16,5 +16,11 @@ pipeline {
         sh 'docker run --rm my-node-app npm test'
       }
     }
+    stage('Package Artifact') {
+      steps {
+        sh 'docker save my-node-app:${BUILD_NUMBER} | gzip > my-node-app-${BUILD_NUMBER}.tar.gz'
+        archiveArtifacts artifacts: 'my-node-app-${BUILD_NUMBER}.tar.gz', fingerprint: true
+      }
+    }
   }
 }
