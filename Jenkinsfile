@@ -26,6 +26,7 @@ pipeline {
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v /var/lib/jenkins/Library/Caches/trivy:/root/.cache/ \
+            -e TRIVY_DB_REPOSITORY=ghcr.io/aquasecurity/trivy-db \
             aquasec/trivy:latest image \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
