@@ -1,25 +1,36 @@
 pipeline {
   agent any
+
   stages {
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t my-node-app -f simple-nodejs-app-1/Dockerfile simple-nodejs-app-1'
+        sh 'docker build -t my-node-app:${BUILD_NUMBER} -t my-node-app:latest -f simple-nodejs-app-1/Dockerfile simple-nodejs-app-1'
       }
     }
+
     stage('Run Lint') {
       steps {
-        sh 'docker run --rm my-node-app npm run lint'
+        sh 'docker run --rm my-node-app:${BUILD_NUMBER} npm run lint'
       }
     }
+
     stage('Run Tests') {
       steps {
-        sh 'docker run --rm my-node-app npm test'
+        sh 'docker run --rm my-node-app:${BUILD_NUMBER} npm test'
       }
     }
+
     stage('Package Artifact') {
       steps {
         sh 'docker save my-node-app:${BUILD_NUMBER} | gzip > my-node-app-${BUILD_NUMBER}.tar.gz'
-        archiveArtifacts artifacts: 'my-node-app-${BUILD_NUMBER}.tar.gz', fingerprint: true
+        archiveArtifacts artifacts: "my-node-app-${BUILD_NUMBER}.tar.gz", fingerprint: true
+      }
+    }
+
+    stage('Use Artifact') {
+      steps {
+        sh "gunzip -c my-node-app-${BUILD_NUMBER}.tar.gz | docker load"
+        sh "docker run -d --rm -p 3000:3000 --name app my-node-app:${BUILD_NUMBER}"
       }
     }
   }
