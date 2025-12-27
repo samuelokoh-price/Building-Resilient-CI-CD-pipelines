@@ -20,6 +20,23 @@ pipeline {
       }
     }
 
+    stage('Image Scan') {
+      steps {
+        sh '''
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            --no-progress \
+            --format table \
+            --output trivy-report-${BUILD_NUMBER}.txt \
+            my-node-app:${BUILD_NUMBER}
+        '''
+        archiveArtifacts artifacts: "trivy-report-${BUILD_NUMBER}.txt", fingerprint: true
+      }
+    }
+
     stage('Package Artifact') {
       steps {
         sh 'docker save my-node-app:${BUILD_NUMBER} | gzip > my-node-app-${BUILD_NUMBER}.tar.gz'
