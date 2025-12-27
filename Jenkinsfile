@@ -23,16 +23,10 @@ pipeline {
     stage('Image Scan') {
       steps {
         sh '''
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v /var/lib/jenkins/Library/Caches/trivy:/root/.cache/ \
-            -e TRIVY_DB_REPOSITORY=ghcr.io/aquasecurity/trivy-db \
-            aquasec/trivy:latest image \
-            --skip-db-update \
+          trivy image \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
             --no-progress \
-            --timeout 20m \
             --format table \
             --output trivy-report-${BUILD_NUMBER}.txt \
             my-node-app:${BUILD_NUMBER}
