@@ -25,10 +25,12 @@ pipeline {
         sh '''
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $HOME/Library/Caches/trivy:/root/.cache/ trivy
             aquasec/trivy:latest image \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
             --no-progress \
+            --timeout 10m \
             --format table \
             --output trivy-report-${BUILD_NUMBER}.txt \
             my-node-app:${BUILD_NUMBER}
