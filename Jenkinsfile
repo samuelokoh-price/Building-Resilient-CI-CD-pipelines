@@ -31,7 +31,7 @@ pipeline {
             --severity HIGH,CRITICAL \
             --exit-code 1 \
             --no-progress \
-            --timeout 10m \
+            --timeout 20m \
             --format table \
             --output trivy-report-${BUILD_NUMBER}.txt \
             my-node-app:${BUILD_NUMBER}
