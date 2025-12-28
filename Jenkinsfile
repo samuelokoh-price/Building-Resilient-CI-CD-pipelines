@@ -44,9 +44,17 @@ pipeline {
     stage('Use Artifact') {
       steps {
         sh "gunzip -c my-node-app-${BUILD_NUMBER}.tar.gz | docker load"
-        sh "docker run -d --rm -p 3000:3000 --name app my-node-app:${BUILD_NUMBER}"
+        // Run the container temporarily
+        sh """
+          docker rm -f app || true
+          docker run -d --name app -p 3000:3000 my-node-app:${BUILD_NUMBER}
+          sleep 5
+          curl -f http://localhost:3000 || (docker logs app && exit 1)
+          docker rm -f app
+        """
       }
     }
+
 
     stage('Deploy') {
       when {
