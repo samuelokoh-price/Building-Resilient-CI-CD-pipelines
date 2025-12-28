@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const request = require('request');
+const request = require('axios');
 const wikip = require('wiki-infobox-parser');
 
 //ejs
