@@ -71,6 +71,14 @@ pipeline {
         '''
       }
     }
-
   }
+
+  post {
+    always {
+      sh 'docker rm -f app || true'  // Clean up any running container
+      sh 'docker image prune -f'      // Clean up unused images
+      echo "Build ${BUILD_NUMBER} and cleanup process completed."
+    }
+  }
+  
 }
