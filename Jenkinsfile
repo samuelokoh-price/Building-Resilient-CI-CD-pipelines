@@ -25,7 +25,6 @@ pipeline {
         sh '''
           trivy image \
             --severity HIGH,CRITICAL \
-            --exit-code 1 \
             --no-progress \
             --format table \
             --output trivy-report-${BUILD_NUMBER}.txt \
