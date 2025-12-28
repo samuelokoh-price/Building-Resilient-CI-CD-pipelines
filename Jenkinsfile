@@ -47,5 +47,21 @@ pipeline {
         sh "docker run -d --rm -p 3000:3000 --name app my-node-app:${BUILD_NUMBER}"
       }
     }
+
+    stage('Deploy') {
+      when {
+        branch 'main'
+      }
+      steps {
+        sh '''
+          echo "Deploying build ${BUILD_NUMBER} from main..."
+          # Your deploy commands go here, e.g.:
+          # docker login ...
+          # docker push my-node-app:${BUILD_NUMBER}
+          # kubectl apply -f k8s/
+        '''
+      }
+    }
+
   }
 }
