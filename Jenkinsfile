@@ -3,6 +3,7 @@ pipeline {
 
   stages {
     stage('Build Docker Image') {
+      environment { DOCKER_BUILDKIT = '1' }
       steps {
         sh 'docker build -t my-node-app:${BUILD_NUMBER} -t my-node-app:latest -f simple-nodejs-app-1/Dockerfile simple-nodejs-app-1'
       }

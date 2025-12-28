@@ -5,8 +5,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Install dependencies using npm ci
-RUN npm ci
+# Install dependencies with caching
+# Using BuildKit mount for npm cache
+RUN --mount=type=cache,target=/root/.npm \ 
+    npm ci --prefer-offline --no-audit --progress=false
 
 # Copy the rest of your app
 COPY . .
