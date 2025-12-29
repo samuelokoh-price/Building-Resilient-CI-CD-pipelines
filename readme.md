@@ -21,6 +21,23 @@ The goal was to investigate why pipelines fail unexpectedly and then, fix those 
 
 ---
 
+### Installing lint for node.js
+
+To install ESLint for a Node.js project, follow these steps:
+1. **Initialize your Node.js project** (if you haven't already):
+   ```bash
+   npm init -y
+   ```
+2. **Install ESLint as a development dependency**:
+   ```bash
+    npm install eslint --save-dev
+3. **Initialize ESLint configuration**:
+    ```bash
+    npx eslint --init
+
+4. **Write a Dockerfile that builds a Docker image and installs the application dependencies.**
+
+
 ##  Pipeline Stages
 
 ### 1. Build Docker Image
