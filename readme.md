@@ -189,7 +189,7 @@ To install ESLint for a Node.js project, follow these steps:
        Fix: Added post { always { ... } } block to remove containers and prune images
 
 
-##  Things I Learned
+##  Notes
 
 Throughout building and fixing this pipeline, I learned several important lessons about resilience in CI/CD:
 
